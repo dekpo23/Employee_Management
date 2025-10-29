@@ -2,7 +2,7 @@ from sqlalchemy import text
 import uvicorn
 from dotenv import load_dotenv
 import os
-from pydantic import BaseModel, Field, field_validator, ValidationError
+from pydantic import BaseModel, Field, field_validator, ValidationError, EmailStr
 from fastapi import FastAPI, status, HTTPException
 from database import db
 import re
@@ -14,7 +14,7 @@ load_dotenv()
 
 class employee_info(BaseModel):
     name: str = Field(..., max_length=100, example = "David Ekpo")
-    email: str = Field(..., max_length=100, pattern=r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', example  = "davidekpo@example.com")
+    email: EmailStr = Field(..., max_length=100, example  = "davidekpo@example.com")
     password: str = Field(..., max_length=255)
     position: Optional[str] = Field(None, example="Junior Data Analyst")
     department: Optional[str] = Field(None, example="Sales")
@@ -30,7 +30,7 @@ class employee_info(BaseModel):
             raise ValueError("Password must contain at least 8 characters, Uppercase and numbers")
         
 class log_in(BaseModel):
-    email: str = Field(..., max_length=100, pattern=r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', example = "davidekpo@example.com")
+    email: EmailStr = Field(..., max_length=100, example = "davidekpo@example.com")
     password: str = Field(..., max_length = 255)
 
     @field_validator("password")
